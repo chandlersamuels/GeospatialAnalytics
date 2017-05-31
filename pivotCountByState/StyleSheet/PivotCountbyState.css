@@ -1,0 +1,26 @@
+body{
+  background-color: white;
+
+}
+
+path:hover {
+  	fill-opacity: .7;
+  }
+
+.legend{
+  display: block;
+  margin: auto;
+  margin-right: 250px
+
+}
+.apple{
+
+  font-size: 1.1em;
+  padding-top: 150px;
+  margin-right: 150px
+
+}
+
+.apple1{
+  margin-top: 100px
+}
