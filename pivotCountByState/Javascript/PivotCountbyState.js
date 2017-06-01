@@ -1,17 +1,28 @@
+//Dynamic text for Captions
+Header = "<b>Wireless Subscribers by Billing State</b>"
+Header2 = "April 2017"
+source = "<i><b>Source:</b> PCS Ensemble Customer Monthly</i>"
+legendHeader = "<b>Wireless Subscribers</b>"
+Description1 = "Map Type: SVG"
+Description2 = "Map Feature: Summarized by Area"
+
+
+document.getElementById("Header").innerHTML = Header;
+document.getElementById("Header2").innerHTML = Header2;
+document.getElementById("Source").innerHTML = source;
+document.getElementById("legendHeader").innerHTML = legendHeader;
+document.getElementById("Description1").innerHTML = Description1;
+document.getElementById("Description2").innerHTML = Description2;
+//-----------------------------------------------------------------
+
 var income_domain = []
 var colorRange = 6
-
-//var income_domain = [1, 30, 100, 500, 21000, 120000]
-
-function renderChart(){
-
-
-
 
 var pivotcountData = d3.map();
 var pivotcountDataArray= [];
 
-d3.queue()
+
+d3.queue() //used to ensure that all data is loaded into the program before execution
   .defer(d3.json, "USbyState/USMap.topojson")
   .defer(d3.csv, "Data/pivotcountofbillState.csv", function(d) {
     if(isNaN(d.count)){
@@ -26,68 +37,95 @@ d3.queue()
   .await(ready)
 
 
-function ready(error, data){
+function ready(error, data){//ready function starts the program once all data is loaded
   if(error) throw error;
 
 
-
+  //max-min are obtained for helper.js range function
+  //Used to create a the domain array for variance in data
   var max = d3.max(pivotcountDataArray, function(d) { return d;});
   var min = d3.min(pivotcountDataArray, function(d) { return d;});
 
 
-
+  //returns an array of integers
   income_domain = range(max, min, colorRange);
-  var legendText = income_domain.map(string);
+  //converts the array of integers to string, and reverses for legend purposes
+  var legendText = income_domain.map(String).reverse();
 
 
-  var scaletype = "linear"
+  var scaletype = "liner" //want to give multiple options for types of graphs
   var income_color = {}
-  var quantile = {}
+
+
+  var color={
+    Blues: "Blues",
+    Reds: "Reds",
+    crazy: "YlGnBu"
+  }
+
+
+
+
+//create a color objects
+  var colorScheme = "Reds"
+//create a scale type object
 
   if(scaletype == "linear")
   {
-    income_color = d3.scaleLinear() //
+    income_color = d3.scaleLinear() //scaleLinear for D3.V4
       .domain(income_domain)
-      .range(["rgb(158,202,225)","rgb(107,174,214)","rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)"]);
+      .range(colorbrewer[color[colorScheme]][colorRange]); //using color brewer
+      //["rgb(158,202,225)","rgb(107,174,214)","rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)"]
   }
   else
   {
-    income_color = d3.scaleLog() //
+    income_color = d3.scaleLog() //scaleLog for D3.v4
         .base(Math.E)
         .domain(income_domain)
-        .range(["rgb(158,202,225)","rgb(107,174,214)","rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)"]);
+        .range(colorbrewer[color[colorScheme]][colorRange]);
   }
 
   //USMap
   var usMap = topojson.feature(data, {
     type: "GeometryCollection",
-    geometries: data.objects.USMap.geometries
+    geometries: data.objects.USMap.geometries //grabbing the points to create the polygon points so it can trace the Map
   });
 
   //identify projection -using geoalbersUSA
-  var projection = d3.geoAlbersUsa()
-    .fitExtent([[0,0],[700,500]], usMap)
+  var projection = d3.geoAlbersUsa() //geoAlbersUsa is the basic map projection, there are many more. This is the best for plane US view.
+    .fitExtent([[0,0],[700,500]], usMap) //FitExtent used to fit the "Tile" for the viewer
 
-  var geoPath = d3.geoPath().projection(projection)
+  var geoPath = d3.geoPath().projection(projection) //initialize the path
 
-  d3.select("svg.pivotCount").selectAll("path")
-    .data(usMap.features)
+
+  // Define the div for the tooltip
+  var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+
+
+  d3.select("svg.pivotCount").selectAll("path") //assign the projected map to the svg in HTML
+    .data(usMap.features)//.data is given from the argument from the ready function, includes features on the map
     .enter()
     .append("path")
     .attr("d", geoPath)
-    .style("stroke", "#fff")
+    .style("stroke", "#fff") //These two lines are used to create the outline of regions on the map whether its states or counties... etc
     .style("stroke-width", "2")
     .attr("fill", function(d){
-      var value = pivotcountData.get(d.properties.STUSPS);
+      var value = pivotcountData.get(d.properties.STUSPS); //d.properties.<KEY> -> this is what you want match the topojson to the CSV
       return (value != 0 ? income_color(value) : "red");
     })
     .on("mouseover", function(d) {
+      var value = pivotcountData.get(d.properties.STUSPS);
+      var state = pivotcountData.get(d.count)
     	div.transition()
       	   .duration(200)
-           .style("opacity", .9);
-           div.text(d.place)
-           .style("left", (d3.event.pageX) + "px")
-           .style("top", (d3.event.pageY - 28) + "px");
+           .style("opacity", .9)
+           var text = "State: "+ d.properties.STUSPS +"<br/> Wireless Users: " + value;
+           div.html(text)
+             .style("left", (d3.event.pageX) + "px")
+             .style("top", (d3.event.pageY - 28) + "px");
 	})
     .on("mouseout", function(d) {
         div.transition()
@@ -95,7 +133,7 @@ function ready(error, data){
            .style("opacity", 0);
     });
 
-
+//Creating a legend  --------------------------------------------------------------------
 var legend = d3.select("svg.legend")
   .attr("width", 200)
   .attr("height", 200)
@@ -117,7 +155,4 @@ var legend = d3.select("svg.legend")
     .attr("dy",".30em")
     .text(function(d){return d;});
 
-  }
 }
-
-renderChart()
