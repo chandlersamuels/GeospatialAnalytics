@@ -1,4 +1,6 @@
 //Dynamic text for Captions
+
+
 Header = "<b>Wireless Subscribers by Billing State</b>"
 Header2 = "April 2017"
 source = "<i><b>Source:</b> PCS Ensemble Customer Monthly</i>"
@@ -15,12 +17,16 @@ document.getElementById("Description1").innerHTML = Description1;
 document.getElementById("Description2").innerHTML = Description2;
 //-----------------------------------------------------------------
 
+console.log('hello')
 var income_domain = []
 var colorRange = 6
 
 var pivotcountData = d3.map();
 var pivotcountDataArray= [];
+var scaletype = "logarithmic"
 
+function renderChart(){
+  console.log('render')
 
 d3.queue() //used to ensure that all data is loaded into the program before execution
   .defer(d3.json, "USbyState/USMap.topojson")
@@ -34,7 +40,11 @@ d3.queue() //used to ensure that all data is loaded into the program before exec
       pivotcountDataArray.push(+d.count)
     }
   })
-  .await(ready)
+  .await(ready);
+}
+
+
+
 
 
 function ready(error, data){//ready function starts the program once all data is loaded
@@ -53,14 +63,17 @@ function ready(error, data){//ready function starts the program once all data is
   var legendText = income_domain.map(String).reverse();
 
 
-  var scaletype = "liner" //want to give multiple options for types of graphs
+   //want to give multiple options for types of graphs
   var income_color = {}
 
 
   var color={
     Blues: "Blues",
     Reds: "Reds",
-    crazy: "YlGnBu"
+    Greens: "Greens",
+    Oranges: "Oranges",
+    Purples: "Purples",
+    Greys: "Greys"
   }
 
 
@@ -69,6 +82,8 @@ function ready(error, data){//ready function starts the program once all data is
 //create a color objects
   var colorScheme = "Reds"
 //create a scale type object
+
+  console.log(scaletype)
 
   if(scaletype == "linear")
   {
@@ -79,6 +94,7 @@ function ready(error, data){//ready function starts the program once all data is
   }
   else
   {
+    console.log("logarithmic")
     income_color = d3.scaleLog() //scaleLog for D3.v4
         .base(Math.E)
         .domain(income_domain)
@@ -141,7 +157,7 @@ var legend = d3.select("svg.legend")
   .data(income_color.domain().slice().reverse())
   .enter()
   .append("g")
-  .attr("transform", function(d, i) { return "translate(0," +i * 15 + ")"; });
+  .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
   legend.append("rect")
     .attr("width", 18)
@@ -154,5 +170,19 @@ var legend = d3.select("svg.legend")
     .attr("y",9)
     .attr("dy",".30em")
     .text(function(d){return d;});
-
 }
+
+document.getElementById("Linear").addEventListener('click', function(){
+  scaletype = "linear"
+  d3.select("svg").selectAll("*").remove();
+  renderChart()
+})
+
+document.getElementById("Logarithmic").addEventListener('click', function(){
+  scaletype = "Logarithmic"
+  d3.select("svg").selectAll("*").remove();
+  renderChart()
+})
+
+
+renderChart()
