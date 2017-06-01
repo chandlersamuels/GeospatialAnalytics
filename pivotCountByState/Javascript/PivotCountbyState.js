@@ -3,9 +3,10 @@ var colorRange = 6
 
 //var income_domain = [1, 30, 100, 500, 21000, 120000]
 
+function renderChart(){
 
 
-var legendText = ["120,000+", "120,000 - 21,000", "21,000 - 500", "500 - 100","100 - 30","30-1"];
+
 
 var pivotcountData = d3.map();
 var pivotcountDataArray= [];
@@ -28,16 +29,18 @@ d3.queue()
 function ready(error, data){
   if(error) throw error;
 
-  console.log(pivotcountData)
+
 
   var max = d3.max(pivotcountDataArray, function(d) { return d;});
   var min = d3.min(pivotcountDataArray, function(d) { return d;});
 
-  console.log(min)
+
 
   income_domain = range(max, min, colorRange);
+  var legendText = income_domain.map(string);
 
-  var scaletype = "liear"
+
+  var scaletype = "linear"
   var income_color = {}
   var quantile = {}
 
@@ -45,14 +48,14 @@ function ready(error, data){
   {
     income_color = d3.scaleLinear() //
       .domain(income_domain)
-      .range(["rgb(239,243,255)","rgb(198,219,239)","rgb(158,202,225)","rgb(107,174,214)","rgb(49,130,189)","rgb(8,81,156)"]);
+      .range(["rgb(158,202,225)","rgb(107,174,214)","rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)"]);
   }
   else
   {
     income_color = d3.scaleLog() //
         .base(Math.E)
         .domain(income_domain)
-        .range(["rgb(239,243,255)","rgb(198,219,239)","rgb(158,202,225)","rgb(107,174,214)","rgb(49,130,189)","rgb(8,81,156)"]);
+        .range(["rgb(158,202,225)","rgb(107,174,214)","rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)"]);
   }
 
   //USMap
@@ -114,4 +117,7 @@ var legend = d3.select("svg.legend")
     .attr("dy",".30em")
     .text(function(d){return d;});
 
+  }
 }
+
+renderChart()
