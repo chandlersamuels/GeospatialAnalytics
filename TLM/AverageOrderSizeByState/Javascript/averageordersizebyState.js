@@ -1,7 +1,7 @@
 //Dynamic text for Captions
 
 
-Header = "<b>TLM Average Order Size By State</b>"
+Header = "<b>GSR Average Order Size By State</b>"
 Header2 = "All-Time"
 source = "<i><b>Source:</b> Grey Suit Retail</i>"
 legendHeader = "<b>Total Sales</b>"

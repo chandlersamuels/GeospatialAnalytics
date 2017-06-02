@@ -1,7 +1,7 @@
 //Dynamic text for Captions
 
 
-Header = "<b>GSR Total Sales By State</b>"
+Header = "<b>GSR Total Ashely Furniture Sales</b>"
 Header2 = "All-Time"
 source = "<i><b>Source:</b> Grey Suit Retail</i>"
 legendHeader = "<b>Total Sales</b>"
@@ -32,7 +32,7 @@ function renderChart(){
 
 d3.queue() //used to ensure that all data is loaded into the program before execution
   .defer(d3.json, "USbyState/USMap.topojson")
-  .defer(d3.csv, "Data/tlmsalesbyState.csv", function(d) {
+  .defer(d3.csv, "Data/totalAshleySales.csv", function(d) {
     if(isNaN(d.count)){
       pivotcountData.set(d.state, 0);
       pivotcountDataArray.push(0)
