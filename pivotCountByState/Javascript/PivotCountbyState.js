@@ -19,11 +19,11 @@ document.getElementById("Description2").innerHTML = Description2;
 
 console.log('hello')
 var income_domain = []
-var colorRange = 6
-
+var colorRange = 3
 var pivotcountData = d3.map();
 var pivotcountDataArray= [];
-var scaletype = "logarithmic"
+var scaletype = "linear"
+var colorScheme = "Reds"
 
 function renderChart(){
   console.log('render')
@@ -67,29 +67,16 @@ function ready(error, data){//ready function starts the program once all data is
   var income_color = {}
 
 
-  var color={
-    Blues: "Blues",
-    Reds: "Reds",
-    Greens: "Greens",
-    Oranges: "Oranges",
-    Purples: "Purples",
-    Greys: "Greys"
-  }
 
-
-
-
-//create a color objects
-  var colorScheme = "Reds"
-//create a scale type object
 
   console.log(scaletype)
+  console.log(colorScheme)
 
   if(scaletype == "linear")
   {
     income_color = d3.scaleLinear() //scaleLinear for D3.V4
       .domain(income_domain)
-      .range(colorbrewer[color[colorScheme]][colorRange]); //using color brewer
+      .range(colorbrewer[colorScheme][colorRange]); //using color brewer
       //["rgb(158,202,225)","rgb(107,174,214)","rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)"]
   }
   else
@@ -98,7 +85,7 @@ function ready(error, data){//ready function starts the program once all data is
     income_color = d3.scaleLog() //scaleLog for D3.v4
         .base(Math.E)
         .domain(income_domain)
-        .range(colorbrewer[color[colorScheme]][colorRange]);
+        .range(colorbrewer[colorScheme][colorRange]);
   }
 
   //USMap
@@ -172,17 +159,55 @@ var legend = d3.select("svg.legend")
     .text(function(d){return d;});
 }
 
-document.getElementById("Linear").addEventListener('click', function(){
-  scaletype = "linear"
+// document.getElementById("Linear").addEventListener('click', function(){
+//   scaletype = "linear"
+//   d3.select("svg").selectAll("*").remove();
+//   renderChart()
+// })
+//
+// document.getElementById("Logarithmic").addEventListener('click', function(){
+//   scaletype = "Logarithmic"
+//   d3.select("svg").selectAll("*").remove();
+//   renderChart()
+// })
+
+document.getElementById("colorRange3").addEventListener('click', function (){
+  colorRange = "3"
   d3.select("svg").selectAll("*").remove();
+  d3.select("svg.legend").selectAll("*").remove();
   renderChart()
 })
 
-document.getElementById("Logarithmic").addEventListener('click', function(){
-  scaletype = "Logarithmic"
+document.getElementById("colorRange6").addEventListener('click', function(){
+  colorRange = "6"
   d3.select("svg").selectAll("*").remove();
+  d3.select("svg.legend").selectAll("*").remove();
   renderChart()
 })
+
+document.getElementById("colorRange9").addEventListener('click', function(){
+  colorRange = "9"
+  d3.select("svg").selectAll("*").remove();
+  d3.select("svg.legend").selectAll("*").remove();
+  renderChart()
+})
+
+function getColor(selectObject){
+    colorScheme = selectObject.value;
+    d3.select("svg").selectAll("*").remove();
+    d3.select("svg.legend").selectAll("*").remove();
+    renderChart()
+}
+
+// var getColor = document.getElementById("selectOpt", function(){
+//   var colorScheme = getColor.options[getColor.selectedIndex].value;
+//   d3.select("svg").selectAll("*").remove();
+//   d3.select("svg.legend").selectAll("*").remove();
+//   renderChart()
+// });
+//
+//
+// var e
 
 
 renderChart()
