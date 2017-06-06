@@ -1,0 +1,10 @@
+#mapid{
+  height: 600px;
+  width: 600px;
+  display: inline-block;
+}
+
+.column{
+  display: block
+  padding: 2.0rem;
+}
