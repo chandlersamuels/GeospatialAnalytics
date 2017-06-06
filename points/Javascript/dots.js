@@ -135,9 +135,8 @@ function ready(error, data){//ready function starts the program once all data is
 
 
 
-  
+
     console.log(locations)
-    console.log(aa)
 
     d3.select("svg.pivotCount").selectAll("circle")
   		.data(locations).enter()
