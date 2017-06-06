@@ -26,6 +26,7 @@ document.getElementById("Description2").innerHTML = Description2;
 //var colorScheme = "Greens"
 
 var locations = [];
+var colorScheme = "Red"
 
 function renderChart(){
 
@@ -49,7 +50,7 @@ d3.queue() //used to ensure that all data is loaded into the program before exec
 
 function ready(error, data){//ready function starts the program once all data is loaded
   if(error) throw error;
-  console.log("here")
+  console.log(colorScheme)
 
   // //max-min are obtained for helper.js range function
   // //Used to create a the domain array for variance in data
@@ -134,7 +135,7 @@ function ready(error, data){//ready function starts the program once all data is
 
 
 
-    aa = [[-106.139515, 38.829332],[-75.1652, 39.9526]];
+  
     console.log(locations)
     console.log(aa)
 
@@ -143,12 +144,27 @@ function ready(error, data){//ready function starts the program once all data is
   		.append("circle")
   		.attr("cx", function (d) { console.log(projection(d)[0]); return projection(d)[0] })
   		.attr("cy", function (d) { return projection(d)[1]; })
-  		.attr("r", "8px")
-  		.attr("fill", "Red")
-
-
+  		.attr("r", "2px")
+  		.attr("fill", colorScheme);
 }
+
+
+function getColor(selectObject){
+    colorScheme = selectObject.value;
+    d3.select("svg").selectAll("*").remove();
+    d3.select("svg.legend").selectAll("*").remove();
+    renderChart()
+}
+
+
+
 renderChart()
+
+
+
+
+
+
 
 //Creating a legend  --------------------------------------------------------------------
 // var legend = d3.select("svg.legend")
