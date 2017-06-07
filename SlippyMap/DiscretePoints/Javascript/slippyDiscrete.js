@@ -53,7 +53,6 @@ for(var i = 0; i < locations.length; i++)
 
 function getColor(selectObject){
     tileDisplay = selectObject.value;
-    map.removeLayer("")
     d3.select("svg").selectAll("*").remove();;
     renderChart()
 }

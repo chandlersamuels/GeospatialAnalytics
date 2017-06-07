@@ -50,6 +50,7 @@ d3.queue() //used to ensure that all data is loaded into the program before exec
 function ready(error, data){//ready function starts the program once all data is loaded
   if(error) throw error;
 
+  console.log(data)
 
   //max-min are obtained for helper.js range function
   //Used to create a the domain array for variance in data
@@ -159,17 +160,7 @@ var legend = d3.select("svg.legend")
     .text(function(d){return d;});
 }
 
-// document.getElementById("Linear").addEventListener('click', function(){
-//   scaletype = "linear"
-//   d3.select("svg").selectAll("*").remove();
-//   renderChart()
-// })
-//
-// document.getElementById("Logarithmic").addEventListener('click', function(){
-//   scaletype = "Logarithmic"
-//   d3.select("svg").selectAll("*").remove();
-//   renderChart()
-// })
+
 
 document.getElementById("colorRange3").addEventListener('click', function (){
   colorRange = "3"
@@ -199,15 +190,6 @@ function getColor(selectObject){
     renderChart()
 }
 
-// var getColor = document.getElementById("selectOpt", function(){
-//   var colorScheme = getColor.options[getColor.selectedIndex].value;
-//   d3.select("svg").selectAll("*").remove();
-//   d3.select("svg.legend").selectAll("*").remove();
-//   renderChart()
-// });
-//
-//
-// var e
 
 
 renderChart()
