@@ -1,8 +1,9 @@
-Header = "<b>Shentel: pivotcountbyTicket</b>"
-Header2 = "All-Time"
+Header = "<b>Shentel: netRGUs</b>"
+Header2 = "Monthly"
 source = "<i><b>Source:</b> Shentel </i>"
 Description1 = "Map Type: Slippy"
 Description2 = "Map Feature: Summarized by Area"
+
 
 document.getElementById("Header").innerHTML = Header;
 document.getElementById("Header2").innerHTML = Header2;
@@ -10,26 +11,25 @@ document.getElementById("Source").innerHTML = source;
 document.getElementById("Description1").innerHTML = Description1;
 document.getElementById("Description2").innerHTML = Description2;
 
-var income_domain = []
+var income_domainPOS = []
+var income_domainNEG = []
 var chartData = {}
 var chartDataRange = []
-var colorRange = 9
-var colorScheme = "Greens"
+var colorRange = 6
+var colorScheme = "Blues"
 
 
 function renderChart(){
 
   d3.queue() //used to ensure that all data is loaded into the program before execution
     .defer(d3.json, "USbyCounty/4states.geojson")
-    .defer(d3.csv, "Data/ticketcountbyCounty.csv", function(d) {
+    .defer(d3.csv, "Data/netRGUbyCounty.csv", function(d) {
       console.log(d)
-      chartData[d.county] = +d.tickets;
-      chartDataRange.push(+d.tickets)
+      chartData[d.state + '-'+ d.county] = +d.netRGUs;
+      chartDataRange.push(+d.netRGUs)
   })
   .await(ready);
 }
-
-
 
 function ready(error, data){
   if(error) throw error;
@@ -39,21 +39,30 @@ function ready(error, data){
   var max = d3.max(chartDataRange, function(d) { return d;});
   var min = d3.min(chartDataRange, function(d) { return d;});
 
-  income_domain=range(max, min, colorRange);
-  legendText = income_domain.map(String).reverse()
+  income_domainNEG = rangeNEG(0, min, colorRange);
+  income_domainPOS = range(max, 0, colorRange);
+
+  console.log(income_domainNEG)
+
+  legendTextPOS = income_domainPOS.map(String).reverse()
+  legendTextNEG = income_domainNEG.map(String).reverse()
 
   var income_color={}
 
-  income_color = d3.scaleLinear() //scaleLinear for D3.V4
-    .domain(income_domain)
-    .range(colorbrewer[colorScheme][colorRange]);
+  income_colorPOS = d3.scaleLinear() //scaleLinear for D3.V4
+    .domain(income_domainPOS)
+    .range(colorbrewer["Greens"][colorRange]);
+
+  income_colorNEG = d3.scaleLinear() //scaleLinear for D3.V4
+    .domain(income_domainNEG)
+    .range(colorbrewer["Reds"][colorRange]);
 
 
   console.log(data)
   console.log(chartData)
 //augment geojson data with count attribute from csv
  _.each(data.features, function(feature){
-   feature.properties.tickets = chartData[feature.properties.NAME];
+   feature.properties.netRGU = chartData[feature.properties.STATEFP + '-' + feature.properties.NAME];
  })
 
 console.log(data)
@@ -65,7 +74,7 @@ console.log(data)
 
 
  function style(feature){
-   if(feature.properties.tickets == undefined){
+   if(feature.properties.netRGU == undefined){
       return {
           fillColor: "grey", //conf
           weight: 2,
@@ -75,15 +84,28 @@ console.log(data)
           fillOpacity: .2
       };}
       else{
-        return {
-            fillColor: income_color(feature.properties.tickets), //conf
-            weight: 2,
-            opacity: 1,
-            color: 'darkgrey',
-            dashArray: '1',
-            fillOpacity: 1
-        };}
-}
+        colorScheme = "Reds"
+        if(feature.properties.netRGU < 0){
+          return {
+              fillColor: income_colorNEG(feature.properties.netRGU), //conf
+              weight: 2,
+              opacity: 1,
+              color: 'darkgrey',
+              dashArray: '1',
+              fillOpacity: 1
+          };}
+        else {
+          colorScheme = "Greens"
+          return {
+              fillColor: income_colorPOS(feature.properties.netRGU), //conf
+              weight: 2,
+              opacity: 1,
+              color: 'darkgrey',
+              dashArray: '1',
+              fillOpacity: 1
+            };}
+      }
+    }
 
 var geojson;
 
@@ -139,7 +161,7 @@ geojson = L.geoJson(statesData, {
   // method that we will use to update the control based on feature properties passed
   info.update = function (props) {
       this._div.innerHTML = '<h4>Monthly Ticket Count</h4>' +  (props ?
-          '<b>' + props.NAME + '</b><br />' + props.tickets+ ' tickets'
+          '<b>' + props.NAME + '</b><br />' + props.netRGU+ ' netRGUs'
           : 'Hover over a county'); //Things that goes inside the pop-up window.
   };
 
@@ -148,6 +170,7 @@ geojson = L.geoJson(statesData, {
 //Adding Legend to the map--------------------------------------------------------------------------------------------
 
   var legend = L.control({position: 'bottomright'}); //
+  var legend2 = L.control({position: 'bottomright'});
 
   legend.onAdd = function (map) {
 
@@ -155,16 +178,32 @@ geojson = L.geoJson(statesData, {
           labels = [];
 
       // loop through our density intervals and generate a label with a colored square for each interval
-      for (var i = 0; i < legendText.length; i++) {
+      for (var i = 0; i < legendTextPOS.length; i++) {
           div.innerHTML +=
-              '<i style="background:' + income_color(legendText[i]) + '"></i> ' +
-              legendText[i] + (legendText[i + 1] ? '&ndash;' + '<br>' : '-');
+              '<i style="background:' + income_colorPOS(legendTextPOS[i]) + '"></i> ' +
+              legendTextPOS[i] + (legendTextPOS[i + 1] ? '&ndash;' + '<br>' : '-');
+      }
+
+      return div;
+  };
+
+  legend2.onAdd = function (map) {
+
+      var div = L.DomUtil.create('div', 'info legend'),
+          labels = [];
+
+      // loop through our density intervals and generate a label with a colored square for each interval
+      for (var i = 0; i < legendTextNEG.length; i++) {
+          div.innerHTML +=
+              '<i style="background:' + income_colorNEG(legendTextNEG[i]) + '"></i> ' +
+              legendTextNEG[i] + (legendTextNEG[i + 1] ? '&ndash;' + '<br>' : '-');
       }
 
       return div;
   };
 
   legend.addTo(map);
+  legend2.addTo(map);
 
 }
 
