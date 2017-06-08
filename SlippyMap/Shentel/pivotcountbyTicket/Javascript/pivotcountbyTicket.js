@@ -14,7 +14,7 @@ var income_domain = []
 var chartData = {}
 var chartDataRange = []
 var colorRange = 9
-var colorScheme = "Greens"
+var colorScheme = "Blues"
 
 
 function renderChart(){
@@ -22,8 +22,8 @@ function renderChart(){
   d3.queue() //used to ensure that all data is loaded into the program before execution
     .defer(d3.json, "USbyCounty/4states.geojson")
     .defer(d3.csv, "Data/ticketcountbyCounty.csv", function(d) {
-      console.log(d)
-      chartData[d.county] = +d.tickets;
+      chartData[d.state + '-' + d.county] = +d.tickets;
+      console.log(chartData)
       chartDataRange.push(+d.tickets)
   })
   .await(ready);
@@ -34,6 +34,7 @@ function renderChart(){
 function ready(error, data){
   if(error) throw error;
 
+  console.log(chartData)
   console.log(chartDataRange)
 
   var max = d3.max(chartDataRange, function(d) { return d;});
@@ -53,7 +54,7 @@ function ready(error, data){
   console.log(chartData)
 //augment geojson data with count attribute from csv
  _.each(data.features, function(feature){
-   feature.properties.tickets = chartData[feature.properties.NAME];
+   feature.properties.tickets = chartData[feature.properties.STATEFP+ '-' + feature.properties.NAME];
  })
 
 console.log(data)
@@ -81,7 +82,7 @@ console.log(data)
             opacity: 1,
             color: 'darkgrey',
             dashArray: '1',
-            fillOpacity: 1
+            fillOpacity: .6
         };}
 }
 
