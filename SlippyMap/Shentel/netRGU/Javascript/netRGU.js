@@ -69,7 +69,7 @@ console.log(data)
 
  var statesData = data
  var map = L.map('mapid').setView([39.4143, -77.4105], 6); //()[lat, long], zoom)
- L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
+ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png').addTo(map);
 
 
 
