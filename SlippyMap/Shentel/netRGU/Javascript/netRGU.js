@@ -160,7 +160,7 @@ geojson = L.geoJson(statesData, {
 
   // method that we will use to update the control based on feature properties passed
   info.update = function (props) {
-      this._div.innerHTML = '<h4>Monthly Ticket Count</h4>' +  (props ?
+      this._div.innerHTML = '<h4>Monthly Net RGUs</h4>' +  (props ?
           '<b>' + props.NAME + '</b><br />' + props.netRGU+ ' netRGUs'
           : 'Hover over a county'); //Things that goes inside the pop-up window.
   };
