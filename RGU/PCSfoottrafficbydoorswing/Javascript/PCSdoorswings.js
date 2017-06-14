@@ -34,7 +34,7 @@ d3.queue() //used to ensure that all data is loaded into the program before exec
       console.log("invalid Lat/long at house id: "+ d.houseID)
 
     }else{
-      locations.push([+d.Longitude, +d.Latitude, +d.DoorSwings])
+      locations.push([+d.Longitude, +d.Latitude, +d.DoorSwings, d.StoreName])
     }
       //sets the key as the id plus converts string to int
   })
@@ -59,6 +59,10 @@ function ready(error, data){//ready function starts the program once all data is
   var geoPath = d3.geoPath().projection(projection) //initialize the path
  //initialize the path
 
+ var div = d3.select("body").append("div")
+   .attr("class", "tooltip")
+   .style("opacity", 0);
+
   d3.select("svg.pivotCount").selectAll("path") //assign the projected map to the svg in HTML
     .data(maryland.features)//.data is given from the argument from the ready function, includes features on the map
     .enter()
@@ -67,29 +71,6 @@ function ready(error, data){//ready function starts the program once all data is
     .style("stroke", "#808080") //These two lines are used to create the outline of regions on the map whether its states or counties... etc
     .style("stroke-width", "2")
     .attr("fill", 'lightgrey')
-    .on("mouseover", function(d) {
-      //var namehouseID = locationsMap.get([d.longitude, d.latitude);
-      //var latlong = locationsMap.get(d.houseID)
-    	div.transition()
-      	   .duration(200)
-           .style("opacity", .9)
-        //   var text = "House ID: "+ namehouseID +"<br/>" + PopUpText_Description + latlong;
-          // div.html(text)
-             .style("left", (d3.event.pageX) + "px")
-             .style("top", (d3.event.pageY - 28) + "px");
-	})
-    .on("mouseout", function(d) {
-        div.transition()
-           .duration(500)
-           .style("opacity", 0);
-    });
-
-
-    var radius = d3.scaleSqrt()
-      .domain([1000, 5000])
-      .range([0,11])
-
-      console.log("here")
 
 
   d3.select("svg.pivotCount").selectAll("circle")
@@ -99,7 +80,21 @@ function ready(error, data){//ready function starts the program once all data is
 		.attr("cx", function (d) { console.log(projection(d)[0]); return projection(d)[0]})
 		.attr("cy", function (d) { return projection(d)[1];})
 		.attr("r", function (d) {console.log(Math.round(d[2]/1000)); return Math.round(d[2]/1000)}   )
-		.attr("fill", colorScheme);
+		.attr("fill", colorScheme)
+    .on("mouseover", function(d) {
+      console.log()
+       div.transition()
+         .duration(200)
+         .style("opacity", .9);
+       div.html("Store Name: " + d[3] +'<br>'+ "Door Swings: " + d[2])
+         .style("left", (d3.event.pageX) + "px")
+         .style("top", (d3.event.pageY - 28) + "px");
+       })
+     .on("mouseout", function(d) {
+       div.transition()
+         .duration(500)
+         .style("opacity", 0);
+       });
 
 }
 
