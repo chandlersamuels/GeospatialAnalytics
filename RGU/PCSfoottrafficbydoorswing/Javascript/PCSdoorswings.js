@@ -19,7 +19,7 @@ document.getElementById("Description1").innerHTML = Description1;
 document.getElementById("Description2").innerHTML = Description2;
 //-----------------------------------------------------------------
 
-var doorSwings= [];
+
 var locations = [];
 var colorScheme = "Red"
 
@@ -34,8 +34,7 @@ d3.queue() //used to ensure that all data is loaded into the program before exec
       console.log("invalid Lat/long at house id: "+ d.houseID)
 
     }else{
-      locations.push([+d.Longitude, +d.Latitude])
-      doorSwings.push(+d.DoorSwings)
+      locations.push([+d.Longitude, +d.Latitude, +d.DoorSwings])
     }
       //sets the key as the id plus converts string to int
   })
@@ -85,22 +84,23 @@ function ready(error, data){//ready function starts the program once all data is
            .style("opacity", 0);
     });
 
-    console.log(locations)
-    list = [3,4,5,6,7,8,9,10,11,2]
 
-    d3.select("svg.pivotCount").selectAll("circle")
-  		.data(locations)
-      .enter()
-  		.append("circle")
-  		.attr("cx", function (d) { console.log(projection(d)[0]); return projection(d)[0] })
-  		.attr("cy", function (d) { return projection(d)[1]; })
-  		.attr("r", function(d){
-        for(var i = 0; i < doorSwings.length; i++)
-        {
-          return list[i];
-        }
-      })
-  		.attr("fill", colorScheme);
+    var radius = d3.scaleSqrt()
+      .domain([1000, 5000])
+      .range([0,11])
+
+      console.log("here")
+
+
+  d3.select("svg.pivotCount").selectAll("circle")
+		.data(locations)
+    .enter()
+		.append("circle")
+		.attr("cx", function (d) { console.log(projection(d)[0]); return projection(d)[0]})
+		.attr("cy", function (d) { return projection(d)[1];})
+		.attr("r", function (d) {console.log(Math.round(d[2]/1000)); return Math.round(d[2]/1000)}   )
+		.attr("fill", colorScheme);
+
 }
 
 
