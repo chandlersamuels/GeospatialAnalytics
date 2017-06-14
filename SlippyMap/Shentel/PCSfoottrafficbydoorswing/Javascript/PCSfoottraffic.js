@@ -51,7 +51,6 @@ for(var i = 0; i < locations.length; i++)
     fillOpacity: 0.5,
     radius: doorSwings[i]
 }).addTo(map);
-
 }
 
 
