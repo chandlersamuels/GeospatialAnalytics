@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Location Points</title>
+
+    <link rel= "stylesheet" type= "text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.1/css/bulma.min.css">
+    <link rel= "stylesheet" type= "text/css" href="StyleSheet/stylesheet.css">
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src ="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="https://d3js.org/colorbrewer.v1.min.js"></script>
+
+  </head>
+    <body>
+      <div class="container is-fluid">
+        <h1 class = "title has-text-centered apple1" id = "Header"><b>  </b></h1>
+        <h2 class = "title has-text-centered" id = "Header2">  </h2>
+        <div class = "columns">
+          <div class = "column">
+            <svg class = "pivotCount" width = "700" height = "500"></svg>
+          </div>
+          <div class = "column">
+            <h6 class = "title has-text-centered apple" id="legendHeader"><b>  </b></h6>
+            <svg class = "legend" width = "50" height = "50"></svg>
+          </div>
+        </div>
+        <div class = "columns">
+        <!--  <div class = "column">
+            <h4><u> Scale </u></h4>
+            <input type="radio" name="scaletype" id="Linear" value="Linear" checked = "checked" /> Linear
+            <input type="radio" name="scaletype" id="Logarithmic" value="Logarithmic" /> Logarithmic
+          </div> -->
+          <div class = "column">
+            <h4><u> Locations point color </u></h4>
+            <select id = "selectOpt" onchange = "getColor(this)">
+              <option value="Red" selected>Red</option>
+              <option value="Orange">Orange</option>
+              <option value="Blue">Blue</option>
+              <option value="Green">Green</option>
+              <option value="Purple">Purple</option>
+              <option value="Grey">Grey</option>
+            </select>
+          </div>
+          <div class = "column">
+            <p id = "Source"> </p>
+            <p id = "Description1"> </p>
+            <p id = "Description2"> </p>
+          </div>
+      </div>
+      <script type="text/javascript" src="Javascript/shenteltroublemay.js"></script>
+  </body>
+</html>

@@ -60,6 +60,13 @@ function ready(error, data){//ready function starts the program once all data is
 
   //returns an array of integers
   income_domain = range(max, min, colorRange);
+
+  for(var i = 0; i < income_domain.length; i++){
+    length=income_domain[i].toString().length
+
+  }
+
+
   //converts the array of integers to string, and reverses for legend purposes
   var legendText = income_domain.map(String).reverse();
 
@@ -157,7 +164,7 @@ var legend = d3.select("svg.legend")
     .attr("x",24)
     .attr("y",9)
     .attr("dy",".30em")
-    .text(function(d){return d;});
+    .text(function(d){return ">"+d;});
 }
 
 

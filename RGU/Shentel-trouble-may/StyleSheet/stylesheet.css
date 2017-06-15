@@ -1,0 +1,65 @@
+body{
+  background-color: white;
+
+}
+
+path:hover {
+  	fill-opacity: .7;
+    stroke:'black';
+    stroke-width: 2;
+  }
+
+.legend{
+  display: block;
+  margin: auto;
+
+
+}
+.apple{
+
+  font-size: 1.1em;
+  padding-top: 150px;
+  margin-right: 7px;
+
+}
+
+.apple1{
+  margin-top: 100px
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 200px;
+  height: 40px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.feature {
+	  fill: none;
+		stroke: grey;
+		stroke-width: 2px;
+  	stroke-linejoin: round;
+	}
+
+.mesh {
+		fill: none;
+  		stroke: black;
+  		stroke-width: 2px;
+  		stroke-linejoin: round;
+	}
+
+h1 {
+		font-family: sans-serif;
+	}

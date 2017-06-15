@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
+integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
+crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"
+   integrity="sha512-A7vV8IFfih/D732iSSKi20u/ooOfj/AGehOKq0f4vLT1Zr2Y+RX7C+w8A1gaSasGtRUZpF/NZgzSAu4/Gc41Lg=="
+   crossorigin=""></script> -->
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
+  <link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+
+  <link rel= "stylesheet" type= "text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.1/css/bulma.min.css">
+  <link rel="stylesheet" type = "text/css" href = "Stylesheet/Shenteltroublemay.css">
+    <title>map backgrounds</title>
+  </head>
+
+  <body>
+    <div class = "parent-div">
+      <h1 id = "Header"><b>  </b></h1>
+      <h2 id = "Header2">  </h2>
+
+      <div class = "child-div" id="mapid"> </div>
+    </div>
+
+
+
+
+    <div class = "columns">
+      <div class = "column colorScheme">
+        <h4><u> Color Scheme </u></h4>
+        <select id = "selectOpt" onchange = "getColor(this)">
+          <option value='http://{s}.tile.osm.org/{z}/{x}/{y}.png' selected>Standard</option>
+          <option value='https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png'>Dark</option>
+          <option value='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'>Light</option>
+        </select>
+      </div>
+      <div class = "column is-4 is-offset-6">
+        <p id = "Source"> </p>
+        <p id = "Description1"> </p>
+        <p id = "Description2"> </p>
+      </div>
+    </div>
+
+     <script type="text/javascript" src="Javascript/Shenteltroublemay.js"></script>
+  </body>
+</html>
