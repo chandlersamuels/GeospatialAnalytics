@@ -36,7 +36,7 @@ d3.queue() //used to ensure that all data is loaded into the program before exec
       console.log("invalid Lat/long at house id: "+ d.houseID)
 
     }else{
-      locations.push([+d.Longitude, +d.Latitude, d.ServiceType])
+      locations.push([+d.Longitude, +d.Latitude, d.ServiceType, d.Description, +d.Accountnum])
       serviceType.push(d.ServiceType)
 
     }
@@ -111,7 +111,7 @@ function ready(error, data){//ready function starts the program once all data is
          div.transition()
            .duration(200)
            .style("opacity", .9);
-         div.html("Service Type: " + d[2])
+         div.html('Service Account: '+d[4]+ '<br>' + "Service Type: " + d[2] + '<br>' + "Description: " + d[3])
            .style("left", (d3.event.pageX) + "px")
            .style("top", (d3.event.pageY - 28) + "px");
          })
