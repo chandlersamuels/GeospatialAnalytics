@@ -25,8 +25,8 @@ function renderChart(){
         console.log("invalid Lat/long at house id: "+ d.StoreName)
 
       }else{
-        locations.push([+d.Latitude, +d.Longitude, d.ServiceType])
-        serviceType.push(d.ServiceType)
+        locations.push([+d.Latitude, +d.Longitude, d.ServiceType]);
+        serviceType.push(d.ServiceType);
 
     }
       //sets the key as the id plus converts string to int
@@ -53,6 +53,7 @@ Array.prototype.unique = function() {
 
 function ready(error, data){
   console.log(locations)
+
 
   uniqueServiceType = serviceType.unique()
   console.log(uniqueServiceType);
@@ -84,11 +85,11 @@ function Description(locations){
 }
 
 for(var i = 0; i < locations.length; i++)
-  var circle = L.circleMarker(locations[i], {
+  var circle = L.circle(locations[i], {
     color: colorScale(locations[i]),
     fillColor: colorScale(locations[i]),
     fillOpacity: 0.5,
-    radius: 3
+    radius: 15
 }).bindPopup(Description(locations[i])).on('mouseover', function (e) {
       this.openPopup();
     }).on('mouseout', function (e) {
