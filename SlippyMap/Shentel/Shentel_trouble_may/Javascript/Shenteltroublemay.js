@@ -58,11 +58,10 @@ function ready(error, data){
   console.log(uniqueServiceType);
   var colors = ['#C0C0C0', '#808080', '#FF0000', '#800000', '#FFFF00', '#808000', '#00FF00', '#008000', '#00FFFF', '#008080', '#0000FF','#000080','#FF00FF','#800080','#CD5C5C','#F08080','#E9967A','#34495E','#5DADE2','#AF7AC5'];
   //var mapboxAccessToken = 'pk.eyJ1IjoiY2hhbmRsZXJzYW11ZWxzIiwiYSI6ImNqMzM3NmlxcTAwMDYycW5tbW9sOGlhbmYifQ.2ahB5hx3ZV8Txhe_A4209A';
-  var map = L.map('mapid').setView([39.0458, -76.6413], 8); //()[lat, long], zoom)
+  var map = L.map('mapid').setView([38.9520546, -78.318059], 10); //()[lat, long], zoom)
   L.tileLayer(tileDisplay2).addTo(map);
 
   servwithcolors = [];
-
 
   for(var i = 0; i < uniqueServiceType.length; i++)
   {
@@ -79,21 +78,48 @@ function colorScale(arraySpot){
   }
 }
 
+function Description(locations){
+  description = "ServiceType: " + locations[2];
+  return description;
+}
+
 for(var i = 0; i < locations.length; i++)
-  var circle = L.circle(locations[i], {
+  var circle = L.circleMarker(locations[i], {
     color: colorScale(locations[i]),
     fillColor: colorScale(locations[i]),
     fillOpacity: 0.5,
-    radius: 35
-}).addTo(map);
-}
+    radius: 3
+}).bindPopup(Description(locations[i])).on('mouseover', function (e) {
+      this.openPopup();
+    }).on('mouseout', function (e) {
+          this.closePopup();
+        }).addTo(map);
 
 
-function getColor(selectObject){
-    tileDisplay = selectObject.value;
-    d3.select("svg").selectAll("*").remove();;
-    renderChart()
+var legend = L.control({position: 'bottomright'}); //
+
+legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'info legend');
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < servwithcolors.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + servwithcolors[i][1] + '"></i> ' +
+            servwithcolors[i][0] + (servwithcolors[i][0] ? '' + '<br>' : '+');
+    }
+
+    return div;
+};
+
+legend.addTo(map);
+
+
+
+
+
+
 }
+
 
 
 renderChart()
