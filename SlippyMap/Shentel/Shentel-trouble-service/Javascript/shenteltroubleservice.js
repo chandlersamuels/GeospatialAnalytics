@@ -1,8 +1,8 @@
-Header = "<b>Shentel: pivotcountbyTicket</b>"
+Header = "<b>Shentel: Trouble tickets with service type</b>"
 Header2 = "All-Time"
 source = "<i><b>Source:</b> Shentel </i>"
-Description1 = "Map Type: Slippy"
-Description2 = "Map Feature: Summarized by Area"
+Description1 = "Map Type: Slippy-SVG"
+Description2 = "Map Feature: Summarized by Area and Discrete data points"
 
 document.getElementById("Header").innerHTML = Header;
 document.getElementById("Header2").innerHTML = Header2;
@@ -15,6 +15,8 @@ var chartData = {}
 var chartDataRange = []
 var colorRange = 9
 var colorScheme = "Reds"
+serviceType = [] //array used to hold all sequential service types
+locations = []
 
 
 function renderChart(){
@@ -26,10 +28,36 @@ function renderChart(){
       console.log(chartData)
       chartDataRange.push(+d.tickets)
   })
+    .defer(d3.csv, "Data/shentel-troubles-may.csv", function(d) {
+      if(d.Longitude == 0 || d.Latitude == 0){ //statement can be updated in case of flaws in readable data from csv.
+      console.log("invalid Lat/long at house id: "+ d.StoreName)
+
+    }else{
+      locations.push([+d.Latitude, +d.Longitude, d.ServiceType]); //adding information from csv one by one
+      serviceType.push(d.ServiceType); //adding information from csv one by one.
+
+  }
+    //sets the key as the id plus converts string to int
+})
   .await(ready);
 }
 
+Array.prototype.contains = function(v) { //Prototype functions are used to create unique arrays(meaning there are no duplicates)
+    for(var i = 0; i < this.length; i++) {
+        if(this[i] === v) return true;
+    }
+    return false;
+};
 
+Array.prototype.unique = function() {
+    var arr = [];
+    for(var i = 0; i < this.length; i++) {
+        if(!arr.contains(this[i])) {
+            arr.push(this[i]);
+        }
+    }
+    return arr;
+}
 
 function ready(error, data){
   if(error) throw error;
@@ -127,6 +155,63 @@ geojson = L.geoJson(statesData, {
 }).addTo(map);
 
 
+uniqueServiceType = serviceType.unique() //taking all serviceTypes from CSV and creating a unique list for the legend and other purposes
+console.log(uniqueServiceType);
+var colors = ['#C0C0C0', '#808080', '#FF0000', '#800000', '#FFFF00', '#808000', '#00FF00', '#008000', '#00FFFF', '#008080', '#0000FF','#000080','#FF00FF','#800080','#CD5C5C','#F08080','#E9967A','#34495E','#5DADE2','#AF7AC5'];
+
+
+servwithcolors = []; //initializing the array that will hold the specific service type to each color[servicetype,color]
+
+for(var i = 0; i < uniqueServiceType.length; i++)
+{
+    servwithcolors.push([uniqueServiceType[i],colors[i]]) //populating the servwithcolors array
+}
+
+function colorScale(arraySpot){ //assigning color to a circle
+  for(var i = 0; i < servwithcolors.length; i++){
+    if(arraySpot[2]==servwithcolors[i][0]){ //loop through Service type until it matches if the locations/ServiceType. When it does return the color attributed to it.
+      return servwithcolors[i][1];
+    }
+  }
+}
+
+function Description(locations){ //adding description for popup window over mouseover
+  description = "ServiceType: " + locations[2];
+  return description;
+}
+
+for(var i = 0; i < locations.length; i++)
+  var circle = L.circle(locations[i], {
+    color: colorScale(locations[i]),
+    fillColor: colorScale(locations[i]),
+    fillOpacity: 0.5,
+    radius: 15
+}).bindPopup(Description(locations[i])).on('mouseover', function (e) {
+      this.openPopup();
+    }).on('mouseout', function (e) {
+          this.closePopup();
+        }).addTo(map);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //-------------------------------------------------------------------------------------------------------------------
     //We could use the usual popups on click to show information about different states, but we'll choose a different route -- Showing it on state hover inside a custome control.
   var info = L.control(); //L means leaflet control is an attribute
@@ -145,6 +230,13 @@ geojson = L.geoJson(statesData, {
   };
 
   info.addTo(map);
+
+
+
+
+
+
+
 
 //Adding Legend to the map--------------------------------------------------------------------------------------------
 
@@ -166,6 +258,26 @@ geojson = L.geoJson(statesData, {
   };
 
   legend.addTo(map);
+
+
+  var legend2 = L.control({position: 'bottomleft'}); //
+
+  legend2.onAdd = function (map) {
+      var div = L.DomUtil.create('div', 'info legend');
+
+      // loop through our density intervals and generate a label with a colored square for each interval
+      for (var i = 0; i < servwithcolors.length; i++) {
+          div.innerHTML +=
+              '<i style="background:' + servwithcolors[i][1] + '"></i> ' +
+              servwithcolors[i][0] + (servwithcolors[i][0] ? '' + '<br>' : '+');
+      }
+
+      return div;
+  };
+
+  legend2.addTo(map);
+
+
 
 }
 
