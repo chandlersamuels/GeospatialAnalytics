@@ -1,8 +1,8 @@
-Header = "<b>Shentel: Trouble Tickets based on Category.</b>"
+Header = "<b>Shentel: Trouble tickets heat map</b>"
 Header2 = "All-Time"
 source = "<i><b>Source:</b> Shentel </i>"
 Description1 = "Map Type: Slippy"
-Description2 = "Map Feature: Discrete Features"
+Description2 = "Map Feature: Heat Map"
 
 document.getElementById("Header").innerHTML = Header;
 document.getElementById("Header2").innerHTML = Header2;
